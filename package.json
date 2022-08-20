@@ -2,10 +2,17 @@
   "name": "json-to-json-schema",
   "author": "Ido Weitzman",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "test": "tsc && yarn jest"
+  },
   "devDependencies": {
+    "@jest/types": "^28.1.3",
+    "@types/jest": "^28.1.7",
+    "@types/node": "^18.7.7",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "eslint": "^8.0.1",
     "eslint-config-standard-with-typescript": "^22.0.0",
@@ -13,6 +20,7 @@
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "jest": "^28.1.3",
+    "ts-node": "^10.9.1",
     "typescript": "*"
   }
 }
