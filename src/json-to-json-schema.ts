@@ -1,26 +1,23 @@
-interface JsonToJsonSchemaOptions {
-  examples?: boolean
-  titles?: boolean
-}
+import { JsonSchemaConverterFn, JsonToJsonSchemaOptions, TypeToJsonSchemaAction } from './json-to-json-schema.types'
 
-const typeToJsonSchemaProperty = {
+const typeToJsonSchemaProperty: Record<string, {action: TypeToJsonSchemaAction}> = {
   string: {
-    action: (_converterFn: (value: {[key: string]: any}) => {[key: string]: any}, _value: any) => ({
+    action: (_converterFn, _value) => ({
       type: 'string'
     })
   },
   boolean: {
-    action: (_converterFn: (value: {[key: string]: any}) => {[key: string]: any}, _value: any) => ({
+    action: (_converterFn, _value) => ({
       type: 'boolean'
     })
   },
   number: {
-    action: (_convertFn: (value: {[key: string]: any}) => {[key: string]: any}, _value: any) => ({
+    action: (_convertFn, _value) => ({
       type: 'number'
     })
   },
   array: {
-    action: (convertFn: (val: {[key: string]: any}) => {[key: string]: any}, value: any) => ({
+    action: (convertFn, value) => ({
       type: 'array',
       items: {
         type: typeof value[0],
@@ -29,7 +26,7 @@ const typeToJsonSchemaProperty = {
     })
   },
   object: {
-    action: (convertFn: (value: {[key: string]: any}) => {[key: string]: any}, value: any) => ({
+    action: (convertFn, value) => ({
       type: 'object',
       properties: convertFn(value)
 
@@ -37,15 +34,14 @@ const typeToJsonSchemaProperty = {
   }
 }
 
-type JsonSchemaConverterFn = (json: {[key: string]: any}, options: JsonToJsonSchemaOptions) => {[key: string]: any}
 const jsonToJsonSchemaProperties: JsonSchemaConverterFn = (json, options) => {
   const keys = Object.keys(json)
-  let jsonSchema: {[key: string]: any} = {}
+  let jsonSchema: Record<string, any> = {}
 
   keys.forEach(key => {
     const value = json[key]
     const type = Array.isArray(value) ? 'array' : typeof value as keyof typeof typeToJsonSchemaProperty
-    jsonSchema = { ...jsonSchema, [key]: typeToJsonSchemaProperty[type].action((val: {[key: string]: any}) => jsonToJsonSchemaProperties(val, options), value) }
+    jsonSchema = { ...jsonSchema, [key]: typeToJsonSchemaProperty[type].action((val: Record<string, any>) => jsonToJsonSchemaProperties(val, options), value) }
 
     if (options.examples) {
       jsonSchema[key].examples = Array.isArray(value) ? value : [value]
@@ -55,7 +51,7 @@ const jsonToJsonSchemaProperties: JsonSchemaConverterFn = (json, options) => {
   return jsonSchema
 }
 
-const jsonToJsonSchema = (json: {[key: string]: any}, options: JsonToJsonSchemaOptions = {}): {[key: string]: any} => {
+const jsonToJsonSchema = (json: Record<string, any>, options: JsonToJsonSchemaOptions = {}): Record<string, any> => {
   const baseJsonSchema = {
     $schema: 'http://json-schema.org/draft-07/schema#'
   }
