@@ -1,4 +1,5 @@
-import { JsonSchemaConverterFn, JsonToJsonSchemaOptions, TypeToJsonSchemaAction } from './json-to-json-schema.types'
+import { JsonSchemaConverterFn, JsonSchemaEnrichFn, JsonToJsonSchemaOptions, TypeToJsonSchemaAction } from './json-to-json-schema.types'
+import { camel2title } from './utils'
 
 const typeToJsonSchemaProperty: Record<string, {action: TypeToJsonSchemaAction}> = {
   string: {
@@ -34,6 +35,19 @@ const typeToJsonSchemaProperty: Record<string, {action: TypeToJsonSchemaAction}>
   }
 }
 
+const jsonSchemaEnricher: Record<string, {enrich: JsonSchemaEnrichFn}> = {
+  examples: {
+    enrich: (json, value) => {
+      json.examples = Array.isArray(value) ? value : [value]
+    }
+  },
+  titles: {
+    enrich: (json, value: any) => {
+      json.title = camel2title(value)
+    }
+  }
+}
+
 const jsonToJsonSchemaProperties: JsonSchemaConverterFn = (json, options) => {
   const keys = Object.keys(json)
   let jsonSchema: Record<string, any> = {}
@@ -41,11 +55,13 @@ const jsonToJsonSchemaProperties: JsonSchemaConverterFn = (json, options) => {
   keys.forEach(key => {
     const value = json[key]
     const type = Array.isArray(value) ? 'array' : typeof value as keyof typeof typeToJsonSchemaProperty
-    jsonSchema = { ...jsonSchema, [key]: typeToJsonSchemaProperty[type].action((val: Record<string, any>) => jsonToJsonSchemaProperties(val, options), value) }
+    jsonSchema = { ...jsonSchema, [key]: typeToJsonSchemaProperty[type].action(val => jsonToJsonSchemaProperties(val, options), value) }
 
-    if (options.examples) {
-      jsonSchema[key].examples = Array.isArray(value) ? value : [value]
-    }
+    Object.entries(options).forEach(([option, isOptionEnabled]) => {
+      if (isOptionEnabled) {
+        jsonSchemaEnricher[option].enrich(jsonSchema[key], value)
+      }
+    })
   })
 
   return jsonSchema
