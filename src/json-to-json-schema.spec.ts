@@ -197,5 +197,105 @@ describe('JsonToJsonSchema', () => {
         })
       })
     })
+
+    describe('titles', () => {
+      it('should not add titles to json schema with titles=false', () => {
+        const json = {
+          someNumber: 4
+        }
+
+        expect(jsonToJsonSchema(json, { titles: false })).toStrictEqual({
+          ...BASE_SCHEMA,
+          properties: {
+            someNumber: {
+              type: 'number'
+            }
+          }
+        })
+      })
+
+      it('should add titles to json schema when titles=true', () => {
+        const json = {
+          SomeNumber: 4,
+          someString: 'some-string',
+          someBoolean: false
+        }
+
+        expect(jsonToJsonSchema(json, { titles: true })).toStrictEqual({
+          ...BASE_SCHEMA,
+          properties: {
+            SomeNumber: {
+              type: 'number',
+              title: 'Some Number'
+            },
+            someString: {
+              type: 'string',
+              title: 'Some String'
+            },
+            someBoolean: {
+              type: 'boolean',
+              title: 'Some Boolean'
+            }
+          }
+        })
+      })
+
+      it('should add titles to array', () => {
+        const json = {
+          someArray: [{ myArrayProperty: 'my-array-value' }]
+        }
+
+        expect(jsonToJsonSchema(json, { titles: true })).toStrictEqual({
+          ...BASE_SCHEMA,
+          properties: {
+            someArray: {
+              type: 'array',
+              title: 'Some Array',
+              items: {
+                type: 'object',
+                properties: {
+                  myArrayProperty: {
+                    type: 'string',
+                    title: 'My Array Property'
+                  }
+                }
+              }
+            }
+          }
+        })
+      })
+
+      it('should add titles to nested objects', () => {
+        const json = {
+          someObject: {
+            someNestedObject: {
+              myNestedValue: 128
+            }
+          }
+        }
+
+        expect(jsonToJsonSchema(json, { titles: true })).toStrictEqual({
+          ...BASE_SCHEMA,
+          properties: {
+            someObject: {
+              type: 'object',
+              title: 'Some Object',
+              properties: {
+                someNestedObject: {
+                  type: 'object',
+                  title: 'Some Nested Object',
+                  properties: {
+                    myNestedValue: {
+                      type: 'number',
+                      title: 'My Nested Value'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        })
+      })
+    })
   })
 })

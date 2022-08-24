@@ -37,13 +37,13 @@ const typeToJsonSchemaProperty: Record<string, {action: TypeToJsonSchemaAction}>
 
 const jsonSchemaEnricher: Record<string, {enrich: JsonSchemaEnrichFn}> = {
   examples: {
-    enrich: (json, value) => {
+    enrich: (json, _key, value) => {
       json.examples = Array.isArray(value) ? value : [value]
     }
   },
   titles: {
-    enrich: (json, value: any) => {
-      json.title = camel2title(value)
+    enrich: (json, key, _value) => {
+      json.title = camel2title(key)
     }
   }
 }
@@ -59,7 +59,7 @@ const jsonToJsonSchemaProperties: JsonSchemaConverterFn = (json, options) => {
 
     Object.entries(options).forEach(([option, isOptionEnabled]) => {
       if (isOptionEnabled) {
-        jsonSchemaEnricher[option].enrich(jsonSchema[key], value)
+        jsonSchemaEnricher[option].enrich(jsonSchema[key], key, value)
       }
     })
   })
