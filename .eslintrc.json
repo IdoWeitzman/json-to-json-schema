@@ -10,9 +10,9 @@
     "parserOptions": {
         "ecmaVersion": "latest",
         "project": ["tsconfig.json"]
-
     },
     "rules": {
-        "@typescript-eslint/strict-boolean-expressions": "off"
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/consistent-indexed-object-style": ["error", "record"]
     }
 }
