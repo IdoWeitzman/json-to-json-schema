@@ -1,8 +1,9 @@
+import Chance from 'chance'
 import jsonToJsonSchema from './json-to-json-schema'
 
-describe('JsonToJsonSchema', () => {
-  const BASE_SCHEMA = { $schema: 'http://json-schema.org/draft-07/schema#' }
+const chance = new Chance()
 
+describe('JsonToJsonSchema', () => {
   it('should convert json with primitive values to json schema', () => {
     const json = {
       someNumber: 4,
@@ -11,7 +12,6 @@ describe('JsonToJsonSchema', () => {
     }
 
     expect(jsonToJsonSchema(json)).toStrictEqual({
-      ...BASE_SCHEMA,
       properties: {
         someNumber: {
           type: 'number'
@@ -34,7 +34,6 @@ describe('JsonToJsonSchema', () => {
     }
 
     expect(jsonToJsonSchema(json)).toStrictEqual({
-      ...BASE_SCHEMA,
       properties: {
         someObject: {
           type: 'object',
@@ -58,7 +57,6 @@ describe('JsonToJsonSchema', () => {
     }
 
     expect(jsonToJsonSchema(json)).toStrictEqual({
-      ...BASE_SCHEMA,
       properties: {
         someObject: {
           type: 'object',
@@ -83,7 +81,6 @@ describe('JsonToJsonSchema', () => {
     }
 
     expect(jsonToJsonSchema(json)).toStrictEqual({
-      ...BASE_SCHEMA,
       properties: {
         someArray: {
           type: 'array',
@@ -104,7 +101,6 @@ describe('JsonToJsonSchema', () => {
     }
 
     expect(jsonToJsonSchema(json)).toStrictEqual({
-      ...BASE_SCHEMA,
       properties: {
         someArray: {
           type: 'array',
@@ -132,7 +128,6 @@ describe('JsonToJsonSchema', () => {
         }
 
         expect(jsonToJsonSchema(json, { examples: false })).toStrictEqual({
-          ...BASE_SCHEMA,
           properties: {
             someNumber: {
               type: 'number'
@@ -149,7 +144,6 @@ describe('JsonToJsonSchema', () => {
         }
 
         expect(jsonToJsonSchema(json, { examples: true })).toStrictEqual({
-          ...BASE_SCHEMA,
           properties: {
             someNumber: {
               type: 'number',
@@ -178,7 +172,6 @@ describe('JsonToJsonSchema', () => {
         }
 
         expect(jsonToJsonSchema(json, { examples: true })).toStrictEqual({
-          ...BASE_SCHEMA,
           properties: {
             someArray: {
               type: 'array',
@@ -205,7 +198,6 @@ describe('JsonToJsonSchema', () => {
         }
 
         expect(jsonToJsonSchema(json, { titles: false })).toStrictEqual({
-          ...BASE_SCHEMA,
           properties: {
             someNumber: {
               type: 'number'
@@ -222,7 +214,6 @@ describe('JsonToJsonSchema', () => {
         }
 
         expect(jsonToJsonSchema(json, { titles: true })).toStrictEqual({
-          ...BASE_SCHEMA,
           properties: {
             SomeNumber: {
               type: 'number',
@@ -246,7 +237,6 @@ describe('JsonToJsonSchema', () => {
         }
 
         expect(jsonToJsonSchema(json, { titles: true })).toStrictEqual({
-          ...BASE_SCHEMA,
           properties: {
             someArray: {
               type: 'array',
@@ -275,7 +265,6 @@ describe('JsonToJsonSchema', () => {
         }
 
         expect(jsonToJsonSchema(json, { titles: true })).toStrictEqual({
-          ...BASE_SCHEMA,
           properties: {
             someObject: {
               type: 'object',
@@ -292,6 +281,71 @@ describe('JsonToJsonSchema', () => {
                   }
                 }
               }
+            }
+          }
+        })
+      })
+    })
+
+    describe('format', () => {
+      it('should not add format to json schema when format=false', () => {
+        const json = {
+          someUuid: chance.guid(),
+          someEmail: chance.email()
+        }
+
+        expect(jsonToJsonSchema(json, { format: false })).toStrictEqual({
+          properties: {
+            someUuid: {
+              type: 'string'
+            },
+            someEmail: {
+              type: 'string'
+            }
+          }
+        })
+      })
+
+      it('should add format to json schema when format=true', () => {
+        const json = {
+          someUuid: chance.guid(),
+          someEmail: chance.email(),
+          someDate: '2020-12-27',
+          someTime1: '10:00',
+          someTime2: '10:00:00',
+          someDateTime: '2020-12-27T10:00:00.317Z',
+          someUri: chance.url()
+        }
+
+        expect(jsonToJsonSchema(json, { format: true })).toStrictEqual({
+          properties: {
+            someUuid: {
+              type: 'string',
+              format: 'uuid'
+            },
+            someEmail: {
+              type: 'string',
+              format: 'email'
+            },
+            someDate: {
+              type: 'string',
+              format: 'date'
+            },
+            someTime1: {
+              type: 'string',
+              format: 'time'
+            },
+            someTime2: {
+              type: 'string',
+              format: 'time'
+            },
+            someDateTime: {
+              type: 'string',
+              format: 'date-time'
+            },
+            someUri: {
+              type: 'string',
+              format: 'uri'
             }
           }
         })

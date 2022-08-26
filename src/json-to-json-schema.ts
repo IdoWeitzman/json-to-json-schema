@@ -1,5 +1,5 @@
 import { JsonSchemaConverterFn, JsonSchemaEnrichFn, JsonToJsonSchemaOptions, TypeToJsonSchemaAction } from './json-to-json-schema.types'
-import { camel2title } from './utils'
+import { camel2title, detectFormat } from './utils'
 
 const typeToJsonSchemaProperty: Record<string, {action: TypeToJsonSchemaAction}> = {
   string: {
@@ -45,6 +45,15 @@ const jsonSchemaEnricher: Record<string, {enrich: JsonSchemaEnrichFn}> = {
     enrich: (json, key, _value) => {
       json.title = camel2title(key)
     }
+  },
+  format: {
+    enrich: (json, key, value) => {
+      const format = detectFormat(value)
+
+      if (format) {
+        json.format = format
+      }
+    }
   }
 }
 
@@ -68,13 +77,9 @@ const jsonToJsonSchemaProperties: JsonSchemaConverterFn = (json, options) => {
 }
 
 const jsonToJsonSchema = (json: Record<string, any>, options: JsonToJsonSchemaOptions = {}): Record<string, any> => {
-  const baseJsonSchema = {
-    $schema: 'http://json-schema.org/draft-07/schema#'
-  }
   const jsonSchemaProperties = jsonToJsonSchemaProperties(json, options)
 
   return {
-    ...baseJsonSchema,
     properties: jsonSchemaProperties
   }
 }

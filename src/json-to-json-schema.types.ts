@@ -1,6 +1,7 @@
 export interface JsonToJsonSchemaOptions {
   examples?: boolean
   titles?: boolean
+  format?: boolean
 }
 
 export type JsonSchemaConverterFn = (json: Record<string, any>, options: JsonToJsonSchemaOptions) => Record<string, any>
