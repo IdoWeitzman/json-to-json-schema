@@ -47,7 +47,7 @@ For the above example the following json schema is generated:
 ### Parameters
 
 ```
-type jsonToJsonSchema = (json: Record<string, any>, options: JsonToJsonSchemaOptions) => Record<string, any>
+type jsonToJsonSchema = (json: Record<string, any>, options?: JsonToJsonSchemaOptions) => Record<string, any>
 
 export interface JsonToJsonSchemaOptions {
   examples?: boolean // genereates examples for each property
