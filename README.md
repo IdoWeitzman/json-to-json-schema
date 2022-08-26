@@ -3,7 +3,7 @@ Converts JSON to it's corresponsing JSON schema.
 
 ## Usage
 
-```
+```js
 import jsonToJsonSchema from 'json-to-json-schema'
 
 const json = {
@@ -18,7 +18,7 @@ const jsonSchema = jsonToJsonSchema(json, { examples: true, titles: true, format
 
 For the above example the following json schema is generated:
 
-```
+```js
 {
    properties: {
      userId: {
@@ -46,9 +46,10 @@ For the above example the following json schema is generated:
 
 ### Parameters
 
-```
+```typescript
 type jsonToJsonSchema = (json: Record<string, any>, options?: JsonToJsonSchemaOptions) => JSONSchema7
-export interface JsonToJsonSchemaOptions {
+
+interface JsonToJsonSchemaOptions {
   examples?: boolean // genereates examples for each property
   titles?: boolean   // generates title for each property
   format?: boolean   // detects format to each property and adds it, if found
