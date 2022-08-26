@@ -1,4 +1,4 @@
-import { JsonSchemaConverterFn, JsonSchemaEnrichFn, JsonToJsonSchemaOptions, TypeToJsonSchemaAction } from './json-to-json-schema.types'
+import { JsonSchemaConverterFn, JsonSchemaEnrichFn, jsonToJsonSchemaFn, TypeToJsonSchemaAction } from './json-to-json-schema.types'
 import { camel2title, detectFormat } from './utils'
 
 const typeToJsonSchemaProperty: Record<string, {action: TypeToJsonSchemaAction}> = {
@@ -76,7 +76,7 @@ const jsonToJsonSchemaProperties: JsonSchemaConverterFn = (json, options) => {
   return jsonSchema
 }
 
-const jsonToJsonSchema = (json: Record<string, any>, options: JsonToJsonSchemaOptions = {}): Record<string, any> => {
+const jsonToJsonSchema: jsonToJsonSchemaFn = (json, options = {}) => {
   const jsonSchemaProperties = jsonToJsonSchemaProperties(json, options)
 
   return {
