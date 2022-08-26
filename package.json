@@ -1,11 +1,29 @@
 {
   "name": "json-to-json-schema",
   "author": "Ido Weitzman",
+  "description": "Convert JSON to JSON Schema",
   "version": "1.0.0",
   "type": "module",
   "main": "index.js",
   "license": "MIT",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IdoWeitzman/json-to-json-schema.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IdoWeitzman/json-to-json-schema/issues"
+  },
+  "homepage": "https://github.com/IdoWeitzman/json-to-json-schema",
+  "keywords": [
+    "json",
+    "schema",
+    "json-schema",
+    "JSON Schema",
+    "json-to-json-schema",
+    "JSON to JSON schema",
+    "Convert JSON to JSON schema"
+  ],
   "scripts": {
     "test": "tsc && yarn jest"
   },
