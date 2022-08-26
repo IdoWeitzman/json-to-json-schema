@@ -25,7 +25,8 @@
     "Convert JSON to JSON schema"
   ],
   "scripts": {
-    "test": "tsc && yarn jest"
+    "test": "tsc && yarn jest",
+    "prepublishOnly": "yarn test"
   },
   "devDependencies": {
     "@jest/types": "^28.1.3",
