@@ -1,5 +1,5 @@
 {
-  "name": "json-to-json-schema",
+  "name": "@idowei/json-to-json-schema",
   "author": "Ido Weitzman",
   "description": "Convert JSON to JSON Schema",
   "version": "1.0.0",
