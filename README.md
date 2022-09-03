@@ -1,10 +1,22 @@
 <h1>json-to-json-schema</h1>
 Converts JSON to it's corresponsing JSON schema.
 
+## Installation
+
+npm:
+```
+npm i @idowei/json-to-json-schema
+```
+
+yarn:
+```
+yarn add @idowei/json-to-json-schema
+```
+
 ## Usage
 
 ```js
-import jsonToJsonSchema from 'json-to-json-schema'
+import jsonToJsonSchema from '@idowei/json-to-json-schema'
 
 const json = {
   userId: '07b84a8a-7fa3-467c-8129-e6e0dcdd5a40',
