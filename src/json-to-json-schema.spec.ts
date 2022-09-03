@@ -351,5 +351,69 @@ describe('JsonToJsonSchema', () => {
         })
       })
     })
+
+    describe('required', () => {
+      it('should not add required to json schema when required=false', () => {
+        const json = {
+          someNumber: 4
+        }
+
+        expect(jsonToJsonSchema(json, { required: false })).toStrictEqual({
+          properties: {
+            someNumber: {
+              type: 'number'
+            }
+          }
+        })
+      })
+
+      it('should add required to json schema when required=true', () => {
+        const json = {
+          someNumber: 4,
+          someObject: {
+            someNestedObject: {
+              myNestedValue: 128
+            }
+          },
+          someArray: [{ myArrayProperty: 'my-array-value' }]
+        }
+
+        expect(jsonToJsonSchema(json, { required: true })).toStrictEqual({
+          properties: {
+            someNumber: {
+              type: 'number'
+            },
+            someObject: {
+              type: 'object',
+              properties: {
+                someNestedObject: {
+                  type: 'object',
+                  properties: {
+                    myNestedValue: {
+                      type: 'number'
+                    }
+                  },
+                  required: ['myNestedValue']
+                }
+              },
+              required: ['someNestedObject']
+            },
+            someArray: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  myArrayProperty: {
+                    type: 'string'
+                  }
+                },
+                required: ['myArrayProperty']
+              }
+            }
+          },
+          required: ['someNumber', 'someObject', 'someArray']
+        })
+      })
+    })
   })
 })
