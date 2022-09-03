@@ -65,5 +65,6 @@ interface JsonToJsonSchemaOptions {
   examples?: boolean // genereates examples for each property
   titles?: boolean   // generates title for each property
   format?: boolean   // detects format to each property and adds it, if found
+  required?: boolean // marks all fields as required
 }
 ```
