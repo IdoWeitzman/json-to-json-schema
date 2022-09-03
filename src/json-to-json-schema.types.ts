@@ -1,10 +1,13 @@
-import { JSONSchema7 } from 'json-schema'
+import * as JSONSchemaTypes from 'json-schema'
+
 export interface JsonToJsonSchemaOptions {
   examples?: boolean
   titles?: boolean
   format?: boolean
   required?: boolean
 }
+
+export type JSONSchema7 = JSONSchemaTypes.JSONSchema7
 
 export type jsonToJsonSchemaFn = (json: Record<string, any>, options?: JsonToJsonSchemaOptions) => JSONSchema7
 
