@@ -1,6 +1,14 @@
 <h1>json-to-json-schema</h1>
 Converts JSON to it's corresponsing JSON schema.
 
+## Features
+1. Convert JSON to JSON schema
+2. Enrich the converted JSON schema with:
+   * `title` - generate title for each property
+   * `required` - mark each fields as required
+   * `examples` - generate examples for each property
+   * `format` - detect format for relevant properties (supported formats: `uuid`, `email`, `uri`, `date`, `time`)
+
 ## Installation
 
 npm:
@@ -25,7 +33,12 @@ const json = {
   email: "john.doe@gmail.com",
 }
 
-const jsonSchema = jsonToJsonSchema(json, { examples: true, titles: true, format: true });
+const jsonSchema = jsonToJsonSchema(json, { 
+  examples: true, 
+  titles: true, 
+  format: true, 
+  required: true 
+});
 ```
 
 For the above example the following json schema is generated:
@@ -52,7 +65,8 @@ For the above example the following json schema is generated:
        title: 'Email',
        format: 'email'
      }
-   }
+   },
+   required: ['userId', 'userName', 'lastLoginDate', 'email']
 }
 ```
 
@@ -60,11 +74,14 @@ For the above example the following json schema is generated:
 
 ```typescript
 type jsonToJsonSchema = (json: Record<string, any>, options?: JsonToJsonSchemaOptions) => JSONSchema7
-
-interface JsonToJsonSchemaOptions {
-  examples?: boolean // genereates examples for each property
-  titles?: boolean   // generates title for each property
-  format?: boolean   // detects format to each property and adds it, if found
-  required?: boolean // marks all fields as required
-}
 ```
+
+`json: Record<string, any>` - JSON object
+<br/> <br/>
+`options: JsonToJsonSchemaOptions` - optional options object with the following properties:
+Key        | Type          | Default value | Description
+---        | --------      | ----          | ---------
+`titles`   | `boolean`     | `false`       | Generates title for each property.
+`required` | `boolean`     | `false`       | Marks each property as required.
+`examples` | `boolean`     | `false`       | Generates examples for each property.
+`format`   | `boolean`     | `false`       | detects format for each property and adds it (if found). for an example check out Usage section.
