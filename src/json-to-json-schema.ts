@@ -101,7 +101,7 @@ const enrichRootJsonSchema = (jsonSchema: JSONSchema7, options: JsonToJsonSchema
 
 const jsonToJsonSchema: jsonToJsonSchemaFn = (json, options = {}) => {
   const jsonSchemaProperties = jsonToJsonSchemaProperties(json, options)
-  const jsonSchema = { properties: jsonSchemaProperties }
+  const jsonSchema: JSONSchema7 = { properties: jsonSchemaProperties }
 
   enrichRootJsonSchema(jsonSchema, options)
 
